@@ -220,10 +220,10 @@ html:not(.js) .leaf,html:not(.js) .led,html:not(.js) .door3d{display:none}
 /* условия */
 .terms{position:relative;background:linear-gradient(180deg,#F6F1E8,#EFE9DF);color:var(--graphite);box-shadow:inset 0 3px 0 #ffdfa8,inset 0 26px 40px -22px rgba(243,199,126,.55)}
 .terms-in{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
-.term{padding:clamp(34px,4vw,64px) clamp(16px,2vw,36px);border-left:1px solid rgba(21,23,28,.14)}
+.term{display:flex;flex-direction:column;padding:clamp(34px,4vw,64px) clamp(16px,2vw,36px);border-left:1px solid rgba(21,23,28,.14)}
 .term:first-child{border-left:0;padding-left:0}
-.term b{display:block;font:400 clamp(26px,2.7vw,46px)/1.1 var(--display);color:var(--cobalt)}
-.term span{display:block;margin-top:10px;font-size:14.5px;color:rgba(21,23,28,.7)}
+.term b{display:block;font:400 clamp(24px,2.3vw,40px)/1.1 var(--display);text-wrap:balance;color:var(--cobalt)}
+.term span{display:block;margin-top:auto;padding-top:12px;font-size:14.5px;color:rgba(21,23,28,.7)}
 
 /* раскрытие дверью */
 .dr{position:relative;perspective:1500px;background:#d9d1c4}
@@ -231,8 +231,6 @@ html:not(.js) .leaf,html:not(.js) .led,html:not(.js) .door3d{display:none}
 
 /* отделка */
 .fin-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(40px,5vw,90px) clamp(24px,4.2vw,80px)}
-.fin:nth-child(3n+2){margin-top:clamp(40px,7vw,120px)}
-.fin:nth-child(3n){margin-top:clamp(16px,2.6vw,44px)}
 .fin .dr{aspect-ratio:3/4;box-shadow:0 30px 60px -30px rgba(60,40,20,.45)}
 .fin figcaption{padding-top:22px;border-top:1px solid rgba(21,23,28,.16);margin-top:22px}
 .fin h3{font:400 clamp(22px,1.9vw,32px)/1.15 var(--display);color:var(--cobalt)}
@@ -249,7 +247,9 @@ html:not(.js) .leaf,html:not(.js) .led,html:not(.js) .door3d{display:none}
 .svc.is-open .sdoor .leaf{transform:rotateY(-100deg);opacity:0}
 .hnd{position:absolute;right:9%;top:47%;width:3px;height:11%;background:#050505;box-shadow:1px 0 0 rgba(255,255,255,.18)}
 .svc h3{position:relative;z-index:1;font:400 clamp(21px,1.75vw,29px)/1.15 var(--display);margin-top:26px}
-.svc p{margin-top:10px;font-size:14.5px;line-height:1.5;color:rgba(255,255,255,.7)}
+.svc{display:flex;flex-direction:column}
+.svc .more{margin-top:auto;align-self:flex-start}
+.svc p{margin-bottom:18px;margin-top:10px;font-size:14.5px;line-height:1.5;color:rgba(255,255,255,.7)}
 .more{display:inline-flex;align-items:center;gap:9px;margin-top:16px;padding:8px 0;font-size:14px;font-weight:600;color:var(--light);border-bottom:1px solid rgba(243,199,126,.4);transition:border-color var(--t-mid) var(--ease),gap var(--t-mid) var(--ease)}
 .more:hover{border-color:var(--light);gap:13px}
 .svc-foot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(20px,5vw,90px);margin-top:clamp(50px,6vw,100px);padding-top:30px;border-top:1px solid rgba(243,199,126,.3)}
@@ -259,14 +259,12 @@ html:not(.js) .leaf,html:not(.js) .led,html:not(.js) .door3d{display:none}
 /* объекты */
 .obj{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(30px,6vw,110px);align-items:center;margin-top:clamp(90px,11vw,190px)}
 .head + .obj{margin-top:0}
+.obj.rev{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
 .obj.rev .obj-media{order:2}
 .obj-media{position:relative;padding-bottom:9%}
 .obj-media .a{width:78%;aspect-ratio:4/3;box-shadow:0 40px 70px -40px rgba(60,40,20,.5)}
 .obj-media .b{position:absolute;right:0;bottom:0;width:42%;aspect-ratio:4/3;outline:10px solid var(--trav)}
 .obj.rev .obj-media .a{margin-left:auto}.obj.rev .obj-media .b{right:auto;left:0}
-.obj-media.tri{padding-top:6%}
-.obj-media.tri .b{aspect-ratio:4/5;width:34%}
-.obj-media.tri .c{position:absolute;right:4%;top:0;width:40%;aspect-ratio:9/4;outline:10px solid var(--trav)}
 .fact{font:400 clamp(38px,4.6vw,84px)/1 var(--display);color:var(--cobalt);letter-spacing:-.01em}
 .obj h3{font:600 clamp(18px,1.5vw,23px)/1.3 var(--text);margin-top:22px}
 .obj-text p:last-child{margin-top:12px;color:rgba(21,23,28,.74);font-size:clamp(15px,1.1vw,17.5px)}
@@ -288,7 +286,7 @@ html:not(.js) .leaf,html:not(.js) .led,html:not(.js) .door3d{display:none}
 .step.on .spot::after{background:#fff1d6;box-shadow:0 0 14px 3px rgba(243,199,126,.85)}
 
 /* договор */
-.plan{position:absolute;right:max(2vw,calc((100vw - 1760px)/2));top:50%;transform:translateY(-46%);width:min(30vw,560px);color:rgba(0,51,153,.38);pointer-events:none}
+.plan{position:absolute;right:max(2vw,calc((100vw - 1760px)/2));top:50%;transform:translateY(-20%);width:min(30vw,560px);color:rgba(0,51,153,.38);pointer-events:none}
 .clauses{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(24px,4vw,70px);width:min(100%,60vw)}
 .cl{position:relative;padding:28px 0 30px}
 .cl::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:rgba(21,23,28,.26);transform-origin:left;transition:transform var(--t-scene) var(--ease) .15s}
@@ -387,17 +385,16 @@ sup{font-size:.52em;line-height:0;vertical-align:.72em;margin-left:.04em}
   .term:nth-child(odd){border-left:0;padding-left:0}
   .term:nth-child(n+3){border-top:1px solid rgba(21,23,28,.14)}
   .fin-grid{grid-template-columns:1fr;gap:54px}
-  .fin,.fin:nth-child(n){margin-top:0;width:82%}
-  .fin:nth-child(even){margin-left:auto}
   .doors{grid-template-columns:1fr;gap:34px}
   .svc{display:grid;grid-template-columns:118px minmax(0,1fr);column-gap:22px;align-content:start}
   .svc .sdoor{grid-row:1/5}
   .svc h3{margin-top:4px}
-  .svc .more{justify-self:start}
+  .svc .more{justify-self:start;margin-top:0}
+  .svc p{margin-bottom:14px}
   .svc-foot{grid-template-columns:1fr}
-  .obj{grid-template-columns:1fr;gap:34px}
+  .obj,.obj.rev{grid-template-columns:1fr;gap:34px}
   .obj.rev .obj-media{order:0}
-  .obj-media .b,.obj-media.tri .c{outline-width:6px}
+  .obj-media .b{outline-width:6px}
   .trk{grid-template-columns:1fr}
   .trk::before{display:none}
   .step{padding:74px 0 46px 0}

@@ -245,10 +245,8 @@ if(hasGsap&&w.ScrollTrigger&&!reduce){
   var mm=gsap.matchMedia();
   mm.add('(min-width:761px)',function(){
     $$('.obj-media').forEach(function(m){
-      gsap.to($$('.b,.c',m),{yPercent:-16,ease:'none',scrollTrigger:{trigger:m,start:'top bottom',end:'bottom top',scrub:.6}});
+      gsap.to($$('.b',m),{yPercent:-6,ease:'none',scrollTrigger:{trigger:m,start:'top bottom',end:'bottom top',scrub:.6}});
     });
-    $$('.fin:nth-child(3n+2)').forEach(function(f){gsap.to(f,{y:-70,ease:'none',scrollTrigger:{trigger:f,start:'top bottom',end:'bottom top',scrub:.6}})});
-    gsap.to('#plan',{yPercent:-10,ease:'none',scrollTrigger:{trigger:'#dogovor',start:'top bottom',end:'bottom top',scrub:.6}});
   });
   ScrollTrigger.create({trigger:'#mq',start:'top bottom',end:'bottom top',onToggle:function(s){$('#mq').classList.toggle('run',s.isActive)}});
   $$('.dr').forEach(function(dr,i){
