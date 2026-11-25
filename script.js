@@ -132,7 +132,7 @@ function tick(){
   if(Math.abs(dx)<.4||reduce){st.x=st.xT;glide=0;render();return}
   st.x+=dx*.12;render();glide=requestAnimationFrame(tick);
 }
-function goX(v){st.xT=clamp(v,0,G.travel);syncScrub();if(!glide)glide=requestAnimationFrame(tick)}
+function goX(v){scrub.classList.add('used');st.xT=clamp(v,0,G.travel);syncScrub();if(!glide)glide=requestAnimationFrame(tick)}
 function stops(){
   var a=[0];frames.forEach(function(f){a.push(clamp(f.x+f.w/2-G.vw/2,0,G.travel))});a.push(G.travel);a.sort(function(p,q){return p-q});
   return a;

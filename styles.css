@@ -137,17 +137,19 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 .room.drag{cursor:grabbing}
 .scrub{position:absolute;z-index:3;left:var(--edge);right:var(--edge);bottom:18px;display:flex;align-items:center;gap:16px;opacity:0;visibility:hidden;transition:opacity var(--t-mid) var(--ease),visibility 0s linear var(--t-mid)}
 .scrub.on{opacity:1;visibility:visible;transition-delay:0s}
-.scrub-b{flex:0 0 auto;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:var(--light);box-shadow:inset 0 0 0 1px rgba(243,199,126,.55);background:rgba(7,9,23,.55);transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease),opacity var(--t-fast) var(--ease),transform var(--t-fast) var(--ease)}
-.scrub-b svg{width:18px;height:18px}
-@media (hover:hover){.scrub-b:not(:disabled):hover{background:var(--light);color:var(--graphite)}}
+.scrub-b{flex:0 0 auto;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:var(--graphite);background:var(--light);box-shadow:0 0 22px rgba(243,199,126,.45);transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease),opacity var(--t-fast) var(--ease),transform var(--t-fast) var(--ease)}
+.scrub-b svg{width:20px;height:20px;stroke-width:2.2}
+@media (hover:hover){.scrub-b:not(:disabled):hover{background:#ffdca0;box-shadow:0 0 30px rgba(243,199,126,.7)}}
 .scrub-b:active{transform:scale(.95)}
-.scrub-b:disabled{opacity:.3;cursor:default}
+.scrub-b:disabled{background:rgba(255,255,255,.08);color:rgba(255,255,255,.35);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);cursor:default}
 .scrub-r{--p:0%;flex:1 1 auto;min-width:0;height:44px;margin:0;background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer}
-.scrub-r::-webkit-slider-runnable-track{height:2px;border-radius:2px;background:linear-gradient(90deg,var(--light) var(--p),rgba(255,255,255,.18) var(--p))}
-.scrub-r::-moz-range-track{height:2px;border-radius:2px;background:linear-gradient(90deg,var(--light) var(--p),rgba(255,255,255,.18) var(--p))}
-.scrub-r::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-10px;border-radius:50%;background:var(--light);border:5px solid #1a140c;box-shadow:0 0 0 1.5px var(--light),0 0 18px 2px rgba(243,199,126,.55);transition:transform var(--t-fast) var(--ease)}
-.scrub-r::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--light);border:5px solid #1a140c;box-shadow:0 0 0 1.5px var(--light),0 0 18px 2px rgba(243,199,126,.55)}
+.scrub-r::-webkit-slider-runnable-track{height:4px;border-radius:4px;background:linear-gradient(90deg,var(--light) var(--p),rgba(255,255,255,.34) var(--p));box-shadow:0 0 14px rgba(243,199,126,.25)}
+.scrub-r::-moz-range-track{height:4px;border-radius:4px;background:linear-gradient(90deg,var(--light) var(--p),rgba(255,255,255,.34) var(--p))}
+.scrub-r::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:-13px;border-radius:50%;background:var(--light);border:6px solid #1a140c;box-shadow:0 0 0 1.5px var(--light),0 0 18px 2px rgba(243,199,126,.55);transition:transform var(--t-fast) var(--ease)}
+.scrub-r::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--light);border:5px solid #1a140c;box-shadow:0 0 0 1.5px var(--light),0 0 18px 2px rgba(243,199,126,.55)}
 .scrub-r:active::-webkit-slider-thumb{transform:scale(1.15)}
+.scrub:not(.used) .scrub-r::-webkit-slider-thumb{animation:thumbPulse 1.8s ease-in-out infinite}
+@keyframes thumbPulse{0%,100%{box-shadow:0 0 0 1.5px var(--light),0 0 0 0 rgba(243,199,126,.55)}50%{box-shadow:0 0 0 1.5px var(--light),0 0 0 12px rgba(243,199,126,0)}}
 .scrub-r:focus-visible{outline:none}
 .scrub-r:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 1.5px var(--light),0 0 0 5px rgba(243,199,126,.35)}
 
@@ -270,9 +272,9 @@ html:not(.js) .leaf{display:none}
 .step.on .spot::after{background:#fff1d6;box-shadow:0 0 14px 3px rgba(243,199,126,.85)}
 
 /* договор */
-.ct-grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:clamp(32px,5vw,96px);align-items:center}
-.ct-photo{aspect-ratio:3/4;box-shadow:0 30px 60px -30px rgba(60,40,20,.45)}
-.ct-photo img{width:100%;height:100%;object-fit:cover}
+.dg-grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:clamp(32px,5vw,96px);align-items:stretch}
+.dg-photo{position:relative;min-height:320px;box-shadow:0 30px 60px -30px rgba(60,40,20,.45)}
+.dg-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 60%}
 .clauses{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(24px,4vw,70px)}
 .cl{position:relative;padding:28px 0 30px}
 .cl::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:rgba(21,23,28,.26);transform-origin:left;transition:transform var(--t-scene) var(--ease) .15s}
@@ -332,8 +334,8 @@ sup{font-size:.52em;line-height:0;vertical-align:.72em;margin-left:.04em}
   .menu-open .hdr{background:#070917}
   .nav-cta{display:grid;gap:10px;margin-top:26px}
   .doors{grid-template-columns:repeat(3,minmax(0,1fr));gap:44px 22px}
-  .ct-grid{grid-template-columns:1fr}
-  .ct-photo{aspect-ratio:16/10}
+  .dg-grid{grid-template-columns:1fr}
+  .dg-photo{aspect-ratio:16/10;min-height:0}
 }
 @media (max-width:760px){
   :root{--hdr-h:62px}
@@ -370,7 +372,7 @@ sup{font-size:.52em;line-height:0;vertical-align:.72em;margin-left:.04em}
   .endc-btns .btn{min-height:48px;font-size:14px}
   .scrollcue{display:none}
   .scrub{bottom:72px;gap:10px}
-  .scrub-b{width:40px;height:40px}
+  .scrub-b{width:46px;height:46px}
   .terms-in{grid-template-columns:repeat(2,minmax(0,1fr))}
   .term{padding:26px 14px}
   .term:nth-child(odd){border-left:0;padding-left:0}
@@ -416,6 +418,7 @@ sup{font-size:.52em;line-height:0;vertical-align:.72em;margin-left:.04em}
 .js .hero-copy>.lead{animation-delay:.2s}
 .js .hero-copy>.btns{animation-delay:.3s}
 @media (prefers-reduced-motion:reduce){
+  .scrub .scrub-r::-webkit-slider-thumb{animation:none}
   .js .hero-copy>*{animation:none}
   .scrollcue i{animation:none}
   .hero-bg img{animation:none}
