@@ -95,7 +95,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
   radial-gradient(90vw 60svh at 50% 108%,rgba(138,90,60,.28),transparent 70%),
   repeating-linear-gradient(90deg,rgba(255,255,255,.022) 0 1px,transparent 1px 31svh),
   linear-gradient(180deg,#060714 0,#0B0E24 46%,#0d1030 100%)}
-.track{position:absolute;left:0;top:0;height:100%;display:flex;align-items:flex-start;padding-right:10vw;will-change:transform}
+.track{position:absolute;left:0;top:0;height:100%;display:flex;align-items:flex-start;padding-right:calc(50vw - var(--fw)/2);will-change:transform}
 .p0{position:relative;flex:0 0 100vw;height:100%}
 .go{display:flex;align-items:center;gap:14px;margin-top:38px;color:var(--light)}
 .go span{width:84px;height:1px;background:currentColor;opacity:.5}
@@ -111,7 +111,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 .rail{position:absolute;left:104vw;right:0;top:calc(var(--dt)*.8 - 4px);height:8px;background:#03040b;box-shadow:0 1px 0 rgba(255,255,255,.07)}
 .fr{position:relative;flex:0 0 var(--fw);height:var(--fh);margin:var(--dt) 0 0 var(--gap)}
 .p0 + .rail + .fr{margin-left:4vw}
-.fr-box{position:absolute;inset:0;perspective:1700px;box-shadow:0 0 0 1.5px rgba(243,199,126,.85),0 0 26px 1px rgba(243,199,126,.32)}
+.fr-box{position:absolute;inset:0;perspective:2800px;box-shadow:0 0 0 1.5px rgba(243,199,126,.85),0 0 26px 1px rgba(243,199,126,.32)}
 .fr-box img{width:100%;height:100%;object-fit:cover}
 .fr figcaption{position:absolute;left:0;right:0;top:calc(100% + 18px);font-size:14px;line-height:1.45;color:rgba(255,255,255,.66)}
 .fr figcaption b{font:400 19px/1.2 var(--display);color:#fff;margin-right:6px}
@@ -119,18 +119,17 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 .lamp::after{content:"";position:absolute;left:-22%;right:-22%;top:3px;height:calc(var(--dt)*.2 - 7px);background:linear-gradient(180deg,rgba(243,199,126,.22),transparent);clip-path:polygon(16% 0,84% 0,100% 100%,0 100%);opacity:0;transition:opacity var(--t-scene) var(--ease)}
 .fr.on .lamp{background:#ffe9c2;box-shadow:0 0 16px 2px rgba(243,199,126,.75)}
 .fr.on .lamp::after{opacity:1}
-.curve{position:relative;flex:0 0 calc(var(--fh)*.7);height:calc(var(--dt) + var(--fh));margin-left:var(--gap);background:
-  linear-gradient(90deg,transparent calc(9% - 1px),rgba(0,0,0,.55) 9%,transparent calc(9% + 1px)),
-  linear-gradient(90deg,transparent calc(24% - 1px),rgba(0,0,0,.5) 24%,transparent calc(24% + 1px)),
-  linear-gradient(90deg,transparent calc(44% - 1px),rgba(0,0,0,.45) 44%,transparent calc(44% + 1px)),
-  linear-gradient(90deg,transparent calc(66% - 1px),rgba(0,0,0,.5) 66%,transparent calc(66% + 1px)),
-  linear-gradient(90deg,transparent calc(84% - 1px),rgba(0,0,0,.55) 84%,transparent calc(84% + 1px)),
-  linear-gradient(90deg,transparent calc(95% - 1px),rgba(0,0,0,.6) 95%,transparent calc(95% + 1px)),
-  linear-gradient(90deg,rgba(6,7,20,.96) 0,rgba(6,7,20,.25) 26%,rgba(255,214,160,.10) 46%,rgba(6,7,20,.35) 72%,rgba(6,7,20,.97) 100%),
-  var(--grain) 0 0/480px 960px,
-  linear-gradient(180deg,#6f4429,#8A5A3C 40%,#5d3923)}
-.curve::before{content:"";position:absolute;inset:0 0 auto 0;height:calc(var(--dt)*.8);background:var(--night-2)}
-.curve i{position:absolute;left:-4%;right:-4%;top:calc(var(--dt)*.8);height:3px;border-radius:50%;background:#ffe9c2;box-shadow:0 0 22px 4px rgba(243,199,126,.7),0 18px 60px 10px rgba(243,199,126,.18)}
+/* финал анфилады: проём с заявкой вместо пустой стены */
+.endc{position:relative;flex:0 0 var(--fw);height:var(--fh);margin:var(--dt) 0 0 var(--gap)}
+.endc::before{content:"";position:absolute;inset:-22% -42%;background:radial-gradient(closest-side,rgba(243,199,126,.14),rgba(138,90,60,.07) 55%,transparent);pointer-events:none}
+.endc .lamp{background:#ffe9c2;box-shadow:0 0 16px 2px rgba(243,199,126,.75)}
+.endc .lamp::after{opacity:1}
+.endc-in{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(24px,2.6vw,44px);box-shadow:0 0 0 1.5px rgba(243,199,126,.85),0 0 26px 1px rgba(243,199,126,.32);background:radial-gradient(120% 70% at 50% 0,rgba(243,199,126,.2),transparent 65%),linear-gradient(180deg,#141127,#0b0e24 60%,#070917)}
+.endc-in .kicker{margin-bottom:16px}
+.endc-h{font:400 clamp(28px,2.6vw,46px)/1.08 var(--display);text-wrap:balance}
+.endc-p{margin-top:14px;font-size:15px;line-height:1.5;color:rgba(255,255,255,.72)}
+.endc-btns{display:grid;gap:10px;margin-top:26px}
+.endc-btns .btn{width:100%;padding:0 16px}
 /* ползунок анфилады */
 .room{touch-action:pan-y}
 .room.drag{cursor:grabbing}
@@ -376,6 +375,10 @@ sup{font-size:.52em;line-height:0;vertical-align:.72em;margin-left:.04em}
   .fr figcaption{font-size:15px;top:calc(100% + 26px)}
   .fr figcaption b{display:block;font-size:30px;margin:0 0 10px}
   .p0 + .rail + .fr{margin-left:0}
+  .endc-in{padding:22px 20px}
+  .endc-h{font-size:26px}
+  .endc-p{font-size:14px}
+  .endc-btns .btn{min-height:48px;font-size:14px}
   .scrollcue{display:none}
   .scrub{bottom:72px;gap:10px}
   .scrub-b{width:40px;height:40px}

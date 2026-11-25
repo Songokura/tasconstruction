@@ -62,5 +62,6 @@ window.SITE_EN={
 "wa.of":"Hello. I need a turnkey office renovation in Almaty, please contact me to arrange a site visit.",
 "wa.rest":"Hello. I need a turnkey restaurant or bar renovation in Almaty, please contact me to arrange a site visit.",
 "wa.str":"Hello. I am planning to build a house in Almaty, please contact me to arrange a site visit.",
-"wa.form":"Hello. Site visit request: {type}{area}. Name: {name}, phone: {phone}.","wa.area":", {n} m²"
+"wa.form":"Hello. Site visit request: {type}{area}. Name: {name}, phone: {phone}.","wa.area":", {n} m²",
+"end.kicker":"Your project","end.h":"The next room is yours","end.p":"We visit the site on the day you contact us. Site visits within Almaty are free of charge."
 };

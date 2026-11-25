@@ -86,7 +86,7 @@ var lastW=0;
 function measure(){
   G.vw=html.clientWidth;G.vh=stage.offsetHeight;G.mob=G.vw<=760;
   G.l=vframe.offsetLeft;G.t=vframe.offsetTop;G.w=vframe.offsetWidth;G.h=vframe.offsetHeight;
-  G.door=Math.round(G.vh*1.5);G.travel=Math.max(0,track.scrollWidth-G.vw);
+  G.door=Math.round(G.vh*1.5);var endc=$('.endc',track);G.travel=Math.max(0,endc?Math.round(endc.offsetLeft+endc.offsetWidth/2-G.vw/2):track.scrollWidth-G.vw);
   G.total=G.door;
   journey.style.height=(G.vh+G.total+Math.round(G.vh*.3))+'px';
   st.xT=clamp(st.xT,0,G.travel);st.x=clamp(st.x,0,G.travel);
@@ -148,7 +148,7 @@ function tick(){
 }
 function goX(v){st.xT=clamp(v,0,G.travel);syncScrub();if(!glide)glide=requestAnimationFrame(tick)}
 function stops(){
-  var a=[0];frames.forEach(function(f){a.push(clamp(f.x+f.w/2-G.vw/2,0,G.travel))});a.push(G.travel);
+  var a=[0];frames.forEach(function(f){a.push(clamp(f.x+f.w/2-G.vw/2,0,G.travel))});a.push(G.travel);a.sort(function(p,q){return p-q});
   return a;
 }
 function stepTo(dir){
