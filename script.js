@@ -74,64 +74,50 @@ $$('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){
   history.replaceState(null,'',id);
 })});
 
-/* ---------- вход: стена, дверь, анфилада ---------- */
-var hdr=$('#hdr'),journey=$('#top'),stage=$('#stage'),wall=$('#wall'),room=$('#room'),track=$('#track'),
-    vframe=$('#vframe'),led=$('#led'),hleaf=$('#hleaf'),spill=$('#spill'),copy=$('#heroCopy'),cue=$('#cue'),
-    scrub=$('#scrub'),scrubR=$('#scrubR'),sPrev=$('#scrubPrev'),sNext=$('#scrubNext'),anchor=$('#kvartira'),loop=$('#loop');
+/* ---------- герой ---------- */
+var hdr=$('#hdr'),hero=$('#top'),heroV=$('#heroV'),mobQ=w.matchMedia('(max-width:760px)'),heroIn=true;
+function heroPlay(){
+  if(!mobQ.matches||reduce)return;
+  if(!heroV.src){heroV.src=heroV.getAttribute('data-src');heroV.load()}
+  if(heroIn&&heroV.paused){var p=heroV.play();if(p&&p.catch)p.catch(function(){})}
+}
+if('IntersectionObserver' in w){
+  new IntersectionObserver(function(en){heroIn=en[0].isIntersecting;if(heroIn)heroPlay();else if(!heroV.paused)heroV.pause()}).observe(hero);
+}
+heroPlay();
+if(mobQ.addEventListener)mobQ.addEventListener('change',heroPlay);
+function onScroll(){hdr.classList.toggle('solid',w.pageYOffset>hero.offsetHeight-hdr.offsetHeight-10)}
+onScroll();
+w.addEventListener('scroll',onScroll,{passive:true});
+
+/* ---------- анфилада: листается ползунком ---------- */
+var stage=$('#stage'),room=$('#room'),track=$('#track'),
+    scrub=$('#scrub'),scrubR=$('#scrubR'),sPrev=$('#scrubPrev'),sNext=$('#scrubNext');
 var frames=$$('.fr',track).map(function(el){return {el:el,leaf:$('.leaf',el),r:el.getAttribute('data-hinge')==='r',x:0,w:0,on:false}});
-var G={vw:0,vh:0,l:0,t:0,w:0,h:0,door:0,travel:0,total:0,top:0,mob:false};
-var st={led:reduce?1:0,open:reduce?1:0,idle:0,mx:0,mxT:0,x:0,xT:0};
-var motes=$('#motes'),offNow=null;
+var G={vw:0,travel:0,mob:false};
+var st={x:0,xT:0};
 var lastW=0;
 function measure(){
-  G.vw=html.clientWidth;G.vh=stage.offsetHeight;G.mob=G.vw<=760;
-  G.l=vframe.offsetLeft;G.t=vframe.offsetTop;G.w=vframe.offsetWidth;G.h=vframe.offsetHeight;
-  G.door=Math.round(G.vh*1.5);var endc=$('.endc',track);G.travel=Math.max(0,endc?Math.round(endc.offsetLeft+endc.offsetWidth/2-G.vw/2):track.scrollWidth-G.vw);
-  G.total=G.door;
-  journey.style.height=(G.vh+G.total+Math.round(G.vh*.3))+'px';
+  G.vw=html.clientWidth;G.mob=G.vw<=760;
+  var endc=$('.endc',track);G.travel=Math.max(0,endc?Math.round(endc.offsetLeft+endc.offsetWidth/2-G.vw/2):track.scrollWidth-G.vw);
   st.xT=clamp(st.xT,0,G.travel);st.x=clamp(st.x,0,G.travel);
-  anchor.style.top=(G.door+2)+'px';
-  hleaf.style.left=G.l+'px';hleaf.style.top=G.t+'px';hleaf.style.width=G.w+'px';hleaf.style.height=G.h+'px';
   frames.forEach(function(f){f.x=f.el.offsetLeft;f.w=f.el.offsetWidth});
-  G.top=journey.getBoundingClientRect().top+w.pageYOffset;
   lastW=G.vw;
   if(w.ScrollTrigger)ScrollTrigger.refresh();
   render();
 }
 function render(){
-  var y=w.pageYOffset-G.top,s=clamp(y,0,G.total);
-  var dd=c01(s/G.door),x=st.x;
-  var e=eIO(c01((dd-.2)/.8));
-  var ang=103*st.open+(118-103*st.open)*eOut(c01(dd/.42))-st.open*(1-c01(dd*5))*(st.idle*3+(1-st.mx)*13);
-  var k=1-e;
-  var it=G.t*k,il=G.l*k,ir=(G.vw-G.l-G.w)*k,ib=(G.vh-G.t-G.h)*k;
-  room.style.clipPath='inset('+it.toFixed(1)+'px '+ir.toFixed(1)+'px '+ib.toFixed(1)+'px '+il.toFixed(1)+'px)';
-  led.style.left=(il-2)+'px';led.style.top=(it-2)+'px';led.style.width=(G.vw-il-ir+4)+'px';led.style.height=(G.vh-it-ib+2)+'px';
-  led.style.opacity=(1-c01((e-.55)/.4)).toFixed(3);
-  led.style.clipPath='inset('+((1-st.led)*100).toFixed(1)+'% -60px -60px -60px)';
-  hleaf.style.transform='translate3d('+(-G.l*e).toFixed(1)+'px,0,0) rotateY('+(-ang).toFixed(2)+'deg)';
-  hleaf.style.opacity=(1-c01(e/.4)).toFixed(3);
-  spill.style.opacity=(c01(ang/95)*(1-c01(e*1.6))*(G.mob?.55:1)).toFixed(3);
-  copy.style.opacity=(1-c01(e*(G.mob?7:2.6))).toFixed(3);
-  motes.style.opacity=(c01(ang/95)*(1-c01(e*2.2))).toFixed(3);
-  var off=y>G.total+G.vh||e>.6;if(off!==offNow){offNow=off;stage.classList.toggle('off',off)}
-  copy.style.visibility=e>.4?'hidden':'visible';
-  wall.style.transform='scale('+(1+e*.22).toFixed(4)+')';
-  cue.style.opacity=(1-c01(dd*6)).toFixed(2);
+  var x=st.x;
   track.style.transform='translate3d('+(-x).toFixed(1)+'px,0,0)';
-  var sOn=e>=.98;if(sOn!==scrub.classList.contains('on'))scrub.classList.toggle('on',sOn);
-  syncScrub();
   for(var i=0;i<frames.length;i++){
     var f=frames[i],left=f.x-x;
-    if(e<.5)continue;
     var o=eIO(c01((G.vw*(G.mob?1.0:.96)-left)/(G.vw*(G.mob?.8:.5))));
     var a=o*94;
     f.leaf.style.transform='rotateY('+(f.r?a:-a).toFixed(2)+'deg)';
     f.leaf.style.opacity=(1-c01((o-.86)/.14)).toFixed(3);
     var on=o>.45;if(on!==f.on){f.on=on;f.el.classList.toggle('on',on)}
   }
-  hdr.classList.toggle('solid',y>G.total+G.vh*.2-hdr.offsetHeight);
-  if(loop.src){if(y>G.total+G.vh){if(!loop.paused)loop.pause()}else if(loop.paused&&!reduce){var p=loop.play();if(p&&p.catch)p.catch(function(){})}}
+  syncScrub();
 }
 /* ползунок анфилады */
 var glide=0;
@@ -181,47 +167,17 @@ sNext.addEventListener('click',function(){stepTo(1)});
 })();
 w.__remeasure=function(){requestAnimationFrame(measure)};
 measure();
-w.addEventListener('scroll',render,{passive:true});
-if(lenis)lenis.on('scroll',render);
-w.addEventListener('resize',function(){if(html.clientWidth!==lastW||!G.mob)measure()});
+w.addEventListener('resize',function(){if(html.clientWidth!==lastW)measure()});
 w.addEventListener('load',measure);
 if(d.fonts&&d.fonts.ready)d.fonts.ready.then(measure);
-
-function startVideo(){if(loop.src)return;loop.src=loop.getAttribute('data-src');loop.load();if(!reduce){var p=loop.play();if(p&&p.catch)p.catch(function(){})}}
-(function(){
-  if(reduce)return;
-  for(var i=0;i<16;i++){var m=d.createElement('i'),r=Math.random;
-    m.style.cssText='left:'+(8+r()*84).toFixed(1)+'%;--d:'+(9+r()*9).toFixed(1)+'s;--dl2:-'+(r()*14).toFixed(1)+'s;--x:'+((r()-.5)*90).toFixed(0)+'px;--s:'+(.5+r()*.9).toFixed(2)+';--o:'+(.35+r()*.5).toFixed(2);
-    motes.appendChild(m)}
-})();
-function atTop(){return w.pageYOffset-G.top<G.door*.2}
-function idle(){
-  if(reduce||!hasGsap)return;
-  gsap.to(st,{idle:1,duration:3.4,ease:'sine.inOut',yoyo:true,repeat:-1,onUpdate:function(){if(atTop())render()}});
-  if(w.matchMedia('(hover:hover)').matches){
-    stage.addEventListener('mousemove',function(e){st.mxT=1-c01(Math.abs(e.clientX-(G.l+G.w/2))/(G.vw*.45))});
-    stage.addEventListener("mouseleave",function(){st.mxT=0});
-    gsap.ticker.add(function(){st.mx+=(st.mxT-st.mx)*.07});
-  }else{gsap.to(st,{mx:1,duration:1.6,ease:'power2.out'})}
-}
-function intro(){
-  if(reduce||!hasGsap){st.led=1;st.open=1;render();startVideo();return}
-  var tl=gsap.timeline({delay:.25});
-  tl.to(st,{led:1,duration:1.2,ease:'power2.inOut',onUpdate:render},.15)
-    .add(startVideo,1.0)
-    .to(st,{open:1,duration:1.9,ease:'power3.inOut',onUpdate:render},1.15)
-    .add(idle);
-}
-if(d.readyState==='complete')intro();else w.addEventListener('load',intro);
-setTimeout(startVideo,4000);
 
 /* ---------- полный ролик ---------- */
 var vmodal=$('#vmodal'),vfull=$('#vfull');
 $('#vplay').addEventListener('click',function(){
   if(!vfull.src)vfull.src=vfull.getAttribute('data-src');
-  vmodal.hidden=false;if(lenis)lenis.stop();loop.pause();var p=vfull.play();if(p&&p.catch)p.catch(function(){});
+  vmodal.hidden=false;if(lenis)lenis.stop();if(!heroV.paused)heroV.pause();var p=vfull.play();if(p&&p.catch)p.catch(function(){});
 });
-function closeV(){vfull.pause();vmodal.hidden=true;if(lenis)lenis.start();render()}
+function closeV(){vfull.pause();vmodal.hidden=true;if(lenis)lenis.start();heroPlay()}
 $('#vclose').addEventListener('click',closeV);
 vmodal.addEventListener('click',function(e){if(e.target===vmodal)closeV()});
 d.addEventListener('keydown',function(e){if(e.key==='Escape'){if(!vmodal.hidden)closeV();menu(false)}});
@@ -273,7 +229,6 @@ if(hasGsap&&w.ScrollTrigger&&!reduce){
       ps.forEach(function(p,i){if(p.getAttribute('stroke-dasharray'))gsap.to(p,{opacity:1,duration:1,delay:i*stg+.4});else gsap.to(p,{strokeDashoffset:0,duration:dur,delay:i*stg,ease:'power2.inOut'})});
     }});
   };
-  draw('#plan path','#dogovor',1.8,.12);
   draw('#coveLine','#kontakty',2.2,0);
   gsap.set('.cove-glow',{opacity:0});
   ScrollTrigger.create({trigger:'#kontakty',start:'top 70%',once:true,onEnter:function(){gsap.to('.cove-glow',{opacity:1,duration:1.6,delay:1.4})}});
