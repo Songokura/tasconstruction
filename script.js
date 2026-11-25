@@ -77,18 +77,19 @@ $$('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){
 /* ---------- вход: стена, дверь, анфилада ---------- */
 var hdr=$('#hdr'),journey=$('#top'),stage=$('#stage'),wall=$('#wall'),room=$('#room'),track=$('#track'),
     vframe=$('#vframe'),led=$('#led'),hleaf=$('#hleaf'),spill=$('#spill'),copy=$('#heroCopy'),cue=$('#cue'),
-    prog=$('#prog'),anchor=$('#kvartira'),loop=$('#loop');
+    scrub=$('#scrub'),scrubR=$('#scrubR'),sPrev=$('#scrubPrev'),sNext=$('#scrubNext'),anchor=$('#kvartira'),loop=$('#loop');
 var frames=$$('.fr',track).map(function(el){return {el:el,leaf:$('.leaf',el),r:el.getAttribute('data-hinge')==='r',x:0,w:0,on:false}});
 var G={vw:0,vh:0,l:0,t:0,w:0,h:0,door:0,travel:0,total:0,top:0,mob:false};
-var st={led:reduce?1:0,open:reduce?1:0,idle:0,mx:0,mxT:0};
+var st={led:reduce?1:0,open:reduce?1:0,idle:0,mx:0,mxT:0,x:0,xT:0};
 var motes=$('#motes'),offNow=null;
 var lastW=0;
 function measure(){
   G.vw=html.clientWidth;G.vh=stage.offsetHeight;G.mob=G.vw<=760;
   G.l=vframe.offsetLeft;G.t=vframe.offsetTop;G.w=vframe.offsetWidth;G.h=vframe.offsetHeight;
   G.door=Math.round(G.vh*1.5);G.travel=Math.max(0,track.scrollWidth-G.vw);
-  G.total=G.door+G.travel;
-  journey.style.height=(G.vh+G.total+Math.round(G.vh*.2))+'px';
+  G.total=G.door;
+  journey.style.height=(G.vh+G.total+Math.round(G.vh*.3))+'px';
+  st.xT=clamp(st.xT,0,G.travel);st.x=clamp(st.x,0,G.travel);
   anchor.style.top=(G.door+2)+'px';
   hleaf.style.left=G.l+'px';hleaf.style.top=G.t+'px';hleaf.style.width=G.w+'px';hleaf.style.height=G.h+'px';
   frames.forEach(function(f){f.x=f.el.offsetLeft;f.w=f.el.offsetWidth});
@@ -99,7 +100,7 @@ function measure(){
 }
 function render(){
   var y=w.pageYOffset-G.top,s=clamp(y,0,G.total);
-  var dd=c01(s/G.door),x=clamp(s-G.door,0,G.travel);
+  var dd=c01(s/G.door),x=st.x;
   var e=eIO(c01((dd-.2)/.8));
   var ang=103*st.open+(118-103*st.open)*eOut(c01(dd/.42))-st.open*(1-c01(dd*5))*(st.idle*3+(1-st.mx)*13);
   var k=1-e;
@@ -118,8 +119,8 @@ function render(){
   wall.style.transform='scale('+(1+e*.22).toFixed(4)+')';
   cue.style.opacity=(1-c01(dd*6)).toFixed(2);
   track.style.transform='translate3d('+(-x).toFixed(1)+'px,0,0)';
-  prog.style.transform='scaleX('+(G.travel?x/G.travel:0).toFixed(4)+')';
-  prog.parentNode.style.opacity=e>=1?1:0;
+  var sOn=e>=.98;if(sOn!==scrub.classList.contains('on'))scrub.classList.toggle('on',sOn);
+  syncScrub();
   for(var i=0;i<frames.length;i++){
     var f=frames[i],left=f.x-x;
     if(e<.5)continue;
@@ -132,6 +133,52 @@ function render(){
   hdr.classList.toggle('solid',y>G.total+G.vh*.2-hdr.offsetHeight);
   if(loop.src){if(y>G.total+G.vh){if(!loop.paused)loop.pause()}else if(loop.paused&&!reduce){var p=loop.play();if(p&&p.catch)p.catch(function(){})}}
 }
+/* ползунок анфилады */
+var glide=0;
+function syncScrub(){
+  var p=G.travel?st.xT/G.travel:0;
+  if(d.activeElement!==scrubR||!scrubR.matches(':active'))scrubR.value=Math.round(p*1000);
+  scrubR.style.setProperty('--p',(p*100).toFixed(2)+'%');
+  sPrev.disabled=st.xT<=2;sNext.disabled=st.xT>=G.travel-2;
+}
+function tick(){
+  var dx=st.xT-st.x;
+  if(Math.abs(dx)<.4||reduce){st.x=st.xT;glide=0;render();return}
+  st.x+=dx*.12;render();glide=requestAnimationFrame(tick);
+}
+function goX(v){st.xT=clamp(v,0,G.travel);syncScrub();if(!glide)glide=requestAnimationFrame(tick)}
+function stops(){
+  var a=[0];frames.forEach(function(f){a.push(clamp(f.x+f.w/2-G.vw/2,0,G.travel))});a.push(G.travel);
+  return a;
+}
+function stepTo(dir){
+  var a=stops(),cur=st.xT,t=dir>0?G.travel:0;
+  for(var i=0;i<a.length;i++){if(dir>0&&a[i]>cur+8){t=a[i];break}}
+  if(dir<0)for(var j=a.length-1;j>=0;j--){if(a[j]<cur-8){t=a[j];break}}
+  goX(t);
+}
+scrubR.addEventListener('input',function(){goX(scrubR.value/1000*G.travel)});
+sPrev.addEventListener('click',function(){stepTo(-1)});
+sNext.addEventListener('click',function(){stepTo(1)});
+(function(){
+  var down=null,sx=0,x0=0,moved=false;
+  room.addEventListener('pointerdown',function(e){
+    if(!scrub.classList.contains('on')||e.button>0||e.target.closest('.scrub,.vplay,a,button'))return;
+    down=e.pointerId;sx=e.clientX;x0=st.xT;moved=false;
+  });
+  room.addEventListener('pointermove',function(e){
+    if(down!==e.pointerId)return;
+    var dx=e.clientX-sx;
+    if(!moved&&Math.abs(dx)>6){moved=true;room.classList.add('drag');try{room.setPointerCapture(e.pointerId)}catch(err){}}
+    if(moved)goX(x0-dx*1.3);
+  });
+  var up=function(e){if(down!==e.pointerId)return;down=null;room.classList.remove('drag')};
+  room.addEventListener('pointerup',up);room.addEventListener('pointercancel',up);
+  room.addEventListener('wheel',function(e){
+    if(!scrub.classList.contains('on')||Math.abs(e.deltaX)<=Math.abs(e.deltaY))return;
+    e.preventDefault();goX(st.xT+e.deltaX);
+  },{passive:false});
+})();
 w.__remeasure=function(){requestAnimationFrame(measure)};
 measure();
 w.addEventListener('scroll',render,{passive:true});
