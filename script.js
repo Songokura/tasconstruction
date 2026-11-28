@@ -253,5 +253,20 @@ form.addEventListener('submit',function(e){
   $('#formOk').hidden=false;
 });
 
+/* частые вопросы: плавное раскрытие */
+$$('.qa').forEach(function(d){
+  var sm=d.querySelector('summary'),a=d.querySelector('.qa-a'),busy=null;
+  sm.addEventListener('click',function(e){
+    if(reduce||!a.animate)return;
+    e.preventDefault();
+    if(busy)busy.cancel();
+    var opening=!d.open,h0=d.open?a.offsetHeight:0;
+    if(opening)d.open=true;
+    var h1=opening?a.scrollHeight:0;
+    busy=a.animate([{height:h0+'px'},{height:h1+'px'}],{duration:opening?420:320,easing:'cubic-bezier(.2,.7,.2,1)'});
+    busy.onfinish=function(){busy=null;if(!opening)d.open=false};
+  });
+});
+
 applyLang();
 })();
